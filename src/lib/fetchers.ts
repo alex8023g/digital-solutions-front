@@ -17,13 +17,14 @@ export async function getRecords(index: number) {
   }
 }
 
-export async function getSelectedRecords() {
+export async function getSelectedRecords(index: number) {
   try {
     const response = await fetch('http://localhost:3000/api/v1/selected-records', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
       },
+      body: JSON.stringify({ index }),
     });
     const data: { id: number; name: string }[] = await response.json();
     console.log('🚀 ~ getSelectedRecords ~ data:', data);

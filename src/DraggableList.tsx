@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useRef } from 'react';
 import {
   DndContext,
   closestCenter,
@@ -14,10 +14,10 @@ import {
   sortableKeyboardCoordinates,
   verticalListSortingStrategy,
 } from '@dnd-kit/sortable';
-
 import { DraggableItem } from './components/DraggableItem';
 import type { Element } from './HomePage';
-import { setSelectedRecords } from './lib/fetchers';
+import { getSelectedRecords, setSelectedRecords } from './lib/fetchers';
+import { useIntersectionObserver } from '@react-hooks-library/core';
 
 export function DraggableList({
   items,
@@ -33,26 +33,42 @@ export function DraggableList({
     })
   );
 
+  const outer = useRef(null);
+  const inner = useRef(null);
+
+  const { inView } = useIntersectionObserver(inner, {
+    root: outer,
+    threshold: 0.5,
+  });
+
   useEffect(() => {
-    console.log('🚀 ~ ExperimentPage2 ~ items:', items);
-    // setSelectedRecords(items);
-  }, [items]);
+    if (inView) {
+      getSelectedRecords(items.length).then((records) => {
+        setItems((items) => [...items, ...records]);
+      });
+    }
+  }, [inView]);
 
   return (
-    <div className='h-[485px] border '>
-      <h2>drag and drop</h2>
-      <DndContext
-        sensors={sensors}
-        collisionDetection={closestCenter}
-        onDragEnd={handleDragEnd}
-      >
-        <SortableContext items={items} strategy={verticalListSortingStrategy}>
-          {items.map((item) => (
-            <DraggableItem key={item.id} item={item} />
-          ))}
-        </SortableContext>
-      </DndContext>
-    </div>
+    <>
+      {inView ? <h2>inView</h2> : <h2>not in view</h2>}
+      <div ref={outer} className='h-[485px] border border-blue-500 overflow-y-scroll'>
+        <DndContext
+          sensors={sensors}
+          collisionDetection={closestCenter}
+          onDragEnd={handleDragEnd}
+        >
+          <SortableContext items={items} strategy={verticalListSortingStrategy}>
+            {items.map((item) => (
+              <DraggableItem key={item.id} item={item} />
+            ))}
+          </SortableContext>
+        </DndContext>
+        <div ref={inner} className='opacity-0'>
+          Load more...
+        </div>
+      </div>
+    </>
   );
 
   function handleDragEnd(event: DragEndEvent) {

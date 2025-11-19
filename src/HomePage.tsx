@@ -18,7 +18,7 @@ export function HomePage() {
   useEffect(() => {
     const interval = setTimeout(async () => {
       await loadMore();
-      const selectedRecords = await getSelectedRecords();
+      const selectedRecords = await getSelectedRecords(selectedElements.length);
       setSelectedElements(selectedRecords);
     });
     return () => clearTimeout(interval);
@@ -48,10 +48,13 @@ export function HomePage() {
                     setElements((elements) =>
                       elements.filter((e) => e.id !== element.id)
                     );
-                    setSelectedElements((selectedElements) => [
-                      ...selectedElements,
-                      element,
-                    ]);
+                    setSelectedElements((selectedElements) => {
+                      if (selectedElements.find((e) => e.id === element.id)) {
+                        return selectedElements;
+                      } else {
+                        return [...selectedElements, element];
+                      }
+                    });
                   }}
                 >
                   {element.id} - {element.name}
@@ -61,10 +64,8 @@ export function HomePage() {
             components={{ Footer: () => <Loading /> }}
           />
         </div>
-        <div className='h-[485px] overflow-y-auto border w-1/2'>
-          <div className=' border'>
-            <div className='border'>Filter</div>
-          </div>
+        <div className='h-[485px] overflow-y-hidden border w-1/2 border-red-500 flex flex-col'>
+          <div className='border'>Filter</div>
           <DraggableList items={selectedElements} setItems={setSelectedElements} />
         </div>
       </div>
