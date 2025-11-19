@@ -1,12 +1,12 @@
 import { Virtuoso } from 'react-virtuoso';
 import { useState, useCallback, useEffect } from 'react';
-import { addSelectedRecord, getRecords, getSelectedRecords } from './lib/getRecords';
+import { addSelectedRecord, getRecords, getSelectedRecords } from './lib/fetchers';
 import { Loading } from './components/Loading';
 import { DraggableList } from './DraggableList';
 
 export type Element = { id: number; name: string };
 
-export function ExperimentPage() {
+export function HomePage() {
   const [elements, setElements] = useState<Element[]>([]);
   const [selectedElements, setSelectedElements] = useState<Element[]>([]);
   const loadMore = useCallback(async () => {

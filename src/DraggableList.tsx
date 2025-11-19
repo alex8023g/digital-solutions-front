@@ -16,8 +16,8 @@ import {
 } from '@dnd-kit/sortable';
 
 import { DraggableItem } from './components/DraggableItem';
-import type { Element } from './ExperimentPage';
-import { setSelectedRecords } from './lib/getRecords';
+import type { Element } from './HomePage';
+import { setSelectedRecords } from './lib/fetchers';
 
 export function DraggableList({
   items,
