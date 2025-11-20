@@ -24,6 +24,15 @@ export function HomePage() {
     return () => clearTimeout(interval);
   }, []);
 
+  useEffect(() => {
+    if (elements.length < 18) {
+      const timeout = setTimeout(async () => {
+        await loadMore();
+      }, 1000);
+      return () => clearTimeout(timeout);
+    }
+  }, [elements]);
+
   return (
     <div className=''>
       <h1>Experiment Page 2</h1>
@@ -44,12 +53,15 @@ export function HomePage() {
                 <div
                   className='text-start'
                   onClick={async () => {
-                    await addSelectedRecord(element.id);
+                    const data = await addSelectedRecord(element.id);
                     setElements((elements) =>
                       elements.filter((e) => e.id !== element.id)
                     );
                     setSelectedElements((selectedElements) => {
-                      if (selectedElements.find((e) => e.id === element.id)) {
+                      if (
+                        selectedElements.find((e) => e.id === element.id) ||
+                        data.length > selectedElements.length + 1
+                      ) {
                         return selectedElements;
                       } else {
                         return [...selectedElements, element];

@@ -61,7 +61,7 @@ export async function addSelectedRecord(id: number) {
       },
       body: JSON.stringify({ id }),
     });
-    const data: { id: number; name: string } = await response.json();
+    const data: { id: number; name: string }[] = await response.json();
     console.log('🚀 ~ addRecord ~ data:', data);
     return data;
   } catch (error) {
