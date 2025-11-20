@@ -14,17 +14,21 @@ import {
   sortableKeyboardCoordinates,
   verticalListSortingStrategy,
 } from '@dnd-kit/sortable';
-import { DraggableItem } from './components/DraggableItem';
-import type { Element } from './HomePage';
-import { getSelectedRecords, setSelectedRecords } from './lib/fetchers';
+import { DraggableItem } from './DraggableItem';
+import type { Element } from '../HomePage';
+import { getSelectedRecords, saveSelectedOrder } from '../lib/fetchers';
 import { useIntersectionObserver } from '@react-hooks-library/core';
 
 export function DraggableList({
   items,
   setItems,
+  elements,
+  setElements,
 }: {
   items: Element[];
   setItems: React.Dispatch<React.SetStateAction<Element[]>>;
+  elements: Element[];
+  setElements: React.Dispatch<React.SetStateAction<Element[]>>;
 }) {
   const sensors = useSensors(
     useSensor(PointerSensor),
@@ -60,7 +64,15 @@ export function DraggableList({
         >
           <SortableContext items={items} strategy={verticalListSortingStrategy}>
             {items.map((item) => (
-              <DraggableItem key={item.id} item={item} />
+              <div key={item.id}>
+                <DraggableItem
+                  key={item.id}
+                  item={item}
+                  elements={elements}
+                  setElements={setElements}
+                  setItems={setItems}
+                />
+              </div>
             ))}
           </SortableContext>
         </DndContext>
@@ -80,7 +92,7 @@ export function DraggableList({
         const oldIndex = items.findIndex((item) => item.id === active.id);
         const newIndex = items.findIndex((item) => item.id === over?.id);
         const newItems = arrayMove(items, oldIndex, newIndex);
-        setSelectedRecords(newItems);
+        saveSelectedOrder(newItems);
         return newItems;
       });
     }

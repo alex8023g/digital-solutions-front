@@ -35,10 +35,10 @@ export async function getSelectedRecords(index: number) {
   }
 }
 
-export async function setSelectedRecords(records: { id: number; name: string }[]) {
+export async function saveSelectedOrder(records: { id: number; name: string }[]) {
   console.log('🚀 ~ setSelectedRecords ~ records:', records);
   try {
-    const res = await fetch('http://localhost:3000/api/v1/set-selected-records', {
+    const res = await fetch('http://localhost:3000/api/v1/save-selected-order', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -64,6 +64,25 @@ export async function addSelectedRecord(id: number) {
     const data: { id: number; name: string }[] = await response.json();
     console.log('🚀 ~ addRecord ~ data:', data);
     return data;
+  } catch (error) {
+    console.error('🚀 ~ addRecord ~ error:', error);
+    return [];
+  }
+}
+
+export async function removeSelectedRecord(id: number) {
+  try {
+    const response = await fetch('http://localhost:3000/api/v1/remove-selected-record', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ id }),
+    });
+    const data: { status: string } = await response.json();
+    if (data.status !== 'ok') {
+      console.error('🚀 ~ removeSelectedRecord ~ error:', 'Failed to remove record');
+    }
   } catch (error) {
     console.error('🚀 ~ addRecord ~ error:', error);
     return [];

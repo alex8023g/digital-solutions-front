@@ -1,10 +1,22 @@
 import React from 'react';
 import { useSortable } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
+import type { Element } from '../HomePage';
+import { removeSelectedRecord } from '../lib/fetchers';
 
-export function DraggableItem(props: { item: { id: number; name: string } }) {
+export function DraggableItem({
+  item,
+  elements,
+  setElements,
+  setItems,
+}: {
+  item: { id: number; name: string };
+  elements: Element[];
+  setElements: React.Dispatch<React.SetStateAction<Element[]>>;
+  setItems: React.Dispatch<React.SetStateAction<Element[]>>;
+}) {
   const { attributes, listeners, setNodeRef, transform, transition } = useSortable({
-    id: props.item.id,
+    id: item.id,
   });
 
   const style = {
@@ -13,8 +25,27 @@ export function DraggableItem(props: { item: { id: number; name: string } }) {
   };
 
   return (
-    <div ref={setNodeRef} style={style} {...attributes} {...listeners}>
-      {props.item.id} - {props.item.name}
+    <div
+      ref={setNodeRef}
+      style={style}
+      {...attributes}
+      className='flex items-center justify-between w-96'
+      onClick={async () => {
+        const less = elements.filter((e) => e.id < item.id).sort((a, b) => a.id - b.id);
+        const clone = structuredClone(elements);
+        clone.splice(less.length, 0, item);
+        setElements(clone);
+        await removeSelectedRecord(item.id);
+        setItems((items) => {
+          const res = items.filter((i) => i.id !== item.id);
+          return res;
+        });
+      }}
+    >
+      <span>
+        {item.id} - {item.name}
+      </span>
+      <div {...listeners}>drag me</div>
     </div>
   );
 }

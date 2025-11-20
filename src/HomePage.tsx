@@ -2,7 +2,7 @@ import { Virtuoso } from 'react-virtuoso';
 import { useState, useCallback, useEffect } from 'react';
 import { addSelectedRecord, getRecords, getSelectedRecords } from './lib/fetchers';
 import { Loading } from './components/Loading';
-import { DraggableList } from './DraggableList';
+import { DraggableList } from './components/DraggableList';
 
 export type Element = { id: number; name: string };
 
@@ -78,7 +78,12 @@ export function HomePage() {
         </div>
         <div className='h-[485px] overflow-y-hidden border w-1/2 border-red-500 flex flex-col'>
           <div className='border'>Filter</div>
-          <DraggableList items={selectedElements} setItems={setSelectedElements} />
+          <DraggableList
+            items={selectedElements}
+            setItems={setSelectedElements}
+            elements={elements}
+            setElements={setElements}
+          />
         </div>
       </div>
     </div>
