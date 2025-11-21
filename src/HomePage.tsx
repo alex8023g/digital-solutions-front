@@ -1,53 +1,44 @@
 import { Virtuoso } from 'react-virtuoso';
 import { useState, useCallback, useEffect } from 'react';
-import { addSelectedRecord, getRecords, getSelectedRecords } from './lib/fetchers';
-import { Loading } from './components/Loading';
+import { addSelectedRecord, getRecords } from './lib/fetchers';
 import { DraggableList } from './components/DraggableList';
-
+import { FilterLeft } from './components/FilterLeft';
 export type Element = { id: number; name: string };
 
 export function HomePage() {
   const [elements, setElements] = useState<Element[]>([]);
   const [selectedElements, setSelectedElements] = useState<Element[]>([]);
+  const [filter, setFilter] = useState<number[]>([]);
+
   const loadMore = useCallback(async () => {
-    console.log('🚀 ~ loadMore ~ start');
-    const batchRecords = await getRecords(elements.length);
+    const batchRecords = await getRecords({ index: elements.length, filter });
     setElements((elements) => [...elements, ...batchRecords]);
-  }, [elements]);
+  }, [elements, filter]);
 
   useEffect(() => {
-    const interval = setTimeout(async () => {
-      await loadMore();
-      const selectedRecords = await getSelectedRecords(selectedElements.length);
-      setSelectedElements(selectedRecords);
-    });
-    return () => clearTimeout(interval);
+    (async () => {
+      const batchRecords = await getRecords({ index: elements.length, filter });
+      setElements(batchRecords);
+    })();
   }, []);
-
-  useEffect(() => {
-    if (elements.length < 18) {
-      const timeout = setTimeout(async () => {
-        await loadMore();
-      }, 1000);
-      return () => clearTimeout(timeout);
-    }
-  }, [elements]);
 
   return (
     <div className=''>
       <h1>Experiment Page 2</h1>
 
-      <div className=' border flex'>
-        <div className='h-[485px] overflow-y-auto border w-1/2'>
-          <div className=' border'>
-            <div className='border'>Filter</div>
-            <div className='border'>add element</div>
+      <div className=' border flex max-w-4xl mx-auto'>
+        <div className='h-[485px] overflow-y-hidden border w-1/2 flex flex-col'>
+          <div className=' '>
+            <FilterLeft setElements={setElements} setFilter={setFilter} />
+            <div className='border px-3'>add element</div>
           </div>
           <Virtuoso
-            style={{ height: '100%' }}
+            style={{ height: '100%', padding: '10px', border: '1px solid red' }}
             data={elements}
-            endReached={loadMore}
-            increaseViewportBy={200}
+            endReached={() => {
+              loadMore();
+            }}
+            totalCount={0}
             itemContent={(index, element) => {
               return (
                 <div
@@ -67,13 +58,16 @@ export function HomePage() {
                         return [...selectedElements, element];
                       }
                     });
+                    if (elements.length < 20) {
+                      loadMore();
+                    }
                   }}
                 >
                   {element.id} - {element.name}
                 </div>
               );
             }}
-            components={{ Footer: () => <Loading /> }}
+            // components={{ Footer: () => <Loading /> }}
           />
         </div>
         <div className='h-[485px] overflow-y-hidden border w-1/2 border-red-500 flex flex-col'>

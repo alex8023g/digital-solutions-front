@@ -1,4 +1,4 @@
-export async function getRecords(index: number) {
+export async function getRecords({ index, filter }: { index: number; filter: number[] }) {
   console.log('🚀 ~ getRecords ~ start, index:', index);
   try {
     const response = await fetch('http://localhost:3000/api/v1/records', {
@@ -6,7 +6,7 @@ export async function getRecords(index: number) {
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify({ index }),
+      body: JSON.stringify({ index, filter }),
     });
     const data: { id: number; name: string }[] = await response.json();
     console.log('🚀 ~ getRecords ~ data:', data);
