@@ -1,7 +1,7 @@
 import { Virtuoso } from 'react-virtuoso';
 import { useState, useCallback, useEffect } from 'react';
 import { addSelectedRecord, getRecords } from './lib/fetchers';
-import { DraggableList } from './components/DraggableList';
+import { RightWindow } from './components/RightWindow';
 import { FilterLeft } from './components/FilterLeft';
 import { Toaster } from 'sonner';
 import { AddElement } from './components/AddElement';
@@ -33,7 +33,6 @@ export function HomePage() {
         <div className='h-[485px] overflow-y-hidden border w-1/2 flex flex-col'>
           <div className=' '>
             <FilterLeft setElements={setElements} setFilter={setFilter} />
-            {/* <div className='border px-3'>add element</div> */}
             <AddElement />
           </div>
           <Virtuoso
@@ -71,11 +70,10 @@ export function HomePage() {
                 </div>
               );
             }}
-            // components={{ Footer: () => <Loading /> }}
           />
         </div>
         <div className='h-[485px] overflow-y-hidden  w-1/2 flex flex-col'>
-          <DraggableList
+          <RightWindow
             items={selectedElements}
             setItems={setSelectedElements}
             elements={elements}

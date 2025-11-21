@@ -20,7 +20,7 @@ import { getSelectedRecords, saveSelectedOrder } from '../lib/fetchers';
 import { useIntersectionObserver } from '@react-hooks-library/core';
 import { FilterRight } from './FilterRight';
 
-export function DraggableList({
+export function RightWindow({
   items,
   setItems,
   elements,
