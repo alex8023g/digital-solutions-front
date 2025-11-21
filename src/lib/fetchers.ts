@@ -1,3 +1,5 @@
+import type { Element } from '../HomePage';
+
 export async function getRecords({ index, filter }: { index: number; filter: number[] }) {
   console.log('🚀 ~ getRecords ~ start, index:', index);
   try {
@@ -98,5 +100,35 @@ export async function removeSelectedRecord(id: number) {
   } catch (error) {
     console.error('🚀 ~ addRecord ~ error:', error);
     return [];
+  }
+}
+
+type ResponseT =
+  | {
+      status: 'error';
+      message: string;
+    }
+  | {
+      status: 'success';
+      record: Element;
+    };
+
+export async function addNewRecord(id: number) {
+  try {
+    const response = await fetch('http://localhost:3000/api/v1/add-new-record', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ id }),
+    });
+
+    const res: ResponseT = await response.json();
+    console.log('🚀 ~ addRecord ~ res:', res);
+    return res;
+  } catch (error) {
+    console.error('🚀 ~ addRecord ~ error:', error);
+    const res: ResponseT = { status: 'error', message: 'Failed to add record' };
+    return res;
   }
 }

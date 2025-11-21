@@ -59,10 +59,10 @@ export function DraggableList({
   return (
     <>
       <FilterRight setElements={setItems} setFilter={setFilter} />
-      <div className='border'>
+      <div className='border py-[6px]'>
         {inView ? <span>inView</span> : <span>not in view</span>}
       </div>
-      <div ref={outer} className='h-[485px] border border-blue-500 overflow-y-scroll'>
+      <div ref={outer} className='h-[485px] overflow-y-scroll'>
         <DndContext
           sensors={sensors}
           collisionDetection={closestCenter}

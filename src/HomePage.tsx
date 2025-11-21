@@ -3,6 +3,9 @@ import { useState, useCallback, useEffect } from 'react';
 import { addSelectedRecord, getRecords } from './lib/fetchers';
 import { DraggableList } from './components/DraggableList';
 import { FilterLeft } from './components/FilterLeft';
+import { Toaster } from 'sonner';
+import { AddElement } from './components/AddElement';
+
 export type Element = { id: number; name: string };
 
 export function HomePage() {
@@ -30,10 +33,11 @@ export function HomePage() {
         <div className='h-[485px] overflow-y-hidden border w-1/2 flex flex-col'>
           <div className=' '>
             <FilterLeft setElements={setElements} setFilter={setFilter} />
-            <div className='border px-3'>add element</div>
+            {/* <div className='border px-3'>add element</div> */}
+            <AddElement />
           </div>
           <Virtuoso
-            style={{ height: '100%', padding: '10px', border: '1px solid red' }}
+            style={{ height: '100%', padding: '10px' }}
             data={elements}
             endReached={() => {
               loadMore();
@@ -70,7 +74,7 @@ export function HomePage() {
             // components={{ Footer: () => <Loading /> }}
           />
         </div>
-        <div className='h-[485px] overflow-y-hidden border w-1/2 border-red-500 flex flex-col'>
+        <div className='h-[485px] overflow-y-hidden  w-1/2 flex flex-col'>
           <DraggableList
             items={selectedElements}
             setItems={setSelectedElements}
@@ -79,6 +83,7 @@ export function HomePage() {
           />
         </div>
       </div>
+      <Toaster />
     </div>
   );
 }
