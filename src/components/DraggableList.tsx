@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import {
   DndContext,
   closestCenter,
@@ -18,6 +18,7 @@ import { DraggableItem } from './DraggableItem';
 import type { Element } from '../HomePage';
 import { getSelectedRecords, saveSelectedOrder } from '../lib/fetchers';
 import { useIntersectionObserver } from '@react-hooks-library/core';
+import { FilterRight } from './FilterRight';
 
 export function DraggableList({
   items,
@@ -30,6 +31,7 @@ export function DraggableList({
   elements: Element[];
   setElements: React.Dispatch<React.SetStateAction<Element[]>>;
 }) {
+  const [filter, setFilter] = useState<number[]>([]);
   const sensors = useSensors(
     useSensor(PointerSensor),
     useSensor(KeyboardSensor, {
@@ -47,15 +49,19 @@ export function DraggableList({
 
   useEffect(() => {
     if (inView) {
-      getSelectedRecords(items.length).then((records) => {
-        setItems((items) => [...items, ...records]);
+      getSelectedRecords({ index: items.length, filter }).then((records) => {
+        console.log(records.data);
+        setItems((items) => [...items, ...records.data]);
       });
     }
-  }, [inView]);
+  }, [inView, filter]);
 
   return (
     <>
-      {inView ? <h2>inView</h2> : <h2>not in view</h2>}
+      <FilterRight setElements={setItems} setFilter={setFilter} />
+      <div className='border'>
+        {inView ? <span>inView</span> : <span>not in view</span>}
+      </div>
       <div ref={outer} className='h-[485px] border border-blue-500 overflow-y-scroll'>
         <DndContext
           sensors={sensors}
@@ -92,7 +98,8 @@ export function DraggableList({
         const oldIndex = items.findIndex((item) => item.id === active.id);
         const newIndex = items.findIndex((item) => item.id === over?.id);
         const newItems = arrayMove(items, oldIndex, newIndex);
-        saveSelectedOrder(newItems);
+        console.log('🚀 ~ handleDragEnd ~ newItems:', newItems);
+        saveSelectedOrder({ records: newItems, filter });
         return newItems;
       });
     }

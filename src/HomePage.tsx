@@ -71,7 +71,6 @@ export function HomePage() {
           />
         </div>
         <div className='h-[485px] overflow-y-hidden border w-1/2 border-red-500 flex flex-col'>
-          <div className='border'>Filter</div>
           <DraggableList
             items={selectedElements}
             setItems={setSelectedElements}

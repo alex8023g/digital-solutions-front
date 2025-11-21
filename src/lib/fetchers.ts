@@ -17,25 +17,37 @@ export async function getRecords({ index, filter }: { index: number; filter: num
   }
 }
 
-export async function getSelectedRecords(index: number) {
+export async function getSelectedRecords({
+  index,
+  filter,
+}: {
+  index: number;
+  filter: number[];
+}) {
   try {
     const response = await fetch('http://localhost:3000/api/v1/selected-records', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify({ index }),
+      body: JSON.stringify({ index, filter }),
     });
     const data: { id: number; name: string }[] = await response.json();
     console.log('🚀 ~ getSelectedRecords ~ data:', data);
-    return data;
+    return { data, hasMore: data.length === 20 };
   } catch (error) {
     console.error('🚀 ~ getSelectedRecords ~ error:', error);
-    return [];
+    return { data: [], hasMore: false };
   }
 }
 
-export async function saveSelectedOrder(records: { id: number; name: string }[]) {
+export async function saveSelectedOrder({
+  records,
+  filter,
+}: {
+  records: { id: number; name: string }[];
+  filter: number[];
+}) {
   console.log('🚀 ~ setSelectedRecords ~ records:', records);
   try {
     const res = await fetch('http://localhost:3000/api/v1/save-selected-order', {
@@ -43,7 +55,7 @@ export async function saveSelectedOrder(records: { id: number; name: string }[])
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify({ records }),
+      body: JSON.stringify({ records, filter }),
     });
     console.log('🚀 ~ setSelectedRecords ~ res:', res);
   } catch (error) {
