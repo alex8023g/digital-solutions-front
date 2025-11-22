@@ -15,9 +15,10 @@ export function DraggableItem({
   setElements: React.Dispatch<React.SetStateAction<Element[]>>;
   setItems: React.Dispatch<React.SetStateAction<Element[]>>;
 }) {
-  const { attributes, listeners, setNodeRef, transform, transition } = useSortable({
-    id: item.id,
-  });
+  const { attributes, listeners, setNodeRef, transform, transition } =
+    useSortable({
+      id: item.id,
+    });
 
   const style = {
     transform: CSS.Transform.toString(transform),
@@ -29,9 +30,11 @@ export function DraggableItem({
       ref={setNodeRef}
       style={style}
       {...attributes}
-      className='flex items-center justify-between w-96'
+      className='flex w-96 items-center justify-between border-b border-gray-200 bg-white p-2'
       onClick={async () => {
-        const less = elements.filter((e) => e.id < item.id).sort((a, b) => a.id - b.id);
+        const less = elements
+          .filter((e) => e.id < item.id)
+          .sort((a, b) => a.id - b.id);
         const clone = structuredClone(elements);
         clone.splice(less.length, 0, item);
         setElements(clone);

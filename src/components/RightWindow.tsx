@@ -36,7 +36,7 @@ export function RightWindow({
     useSensor(PointerSensor),
     useSensor(KeyboardSensor, {
       coordinateGetter: sortableKeyboardCoordinates,
-    })
+    }),
   );
 
   const outer = useRef(null);
@@ -59,7 +59,7 @@ export function RightWindow({
   return (
     <>
       <FilterRight setElements={setItems} setFilter={setFilter} />
-      <div className='border py-[6px]'>
+      <div className='border-b border-gray-200 px-3 py-[6px]'>
         {inView ? <span>inView</span> : <span>not in view</span>}
       </div>
       <div ref={outer} className='h-[485px] overflow-y-scroll'>
@@ -70,7 +70,7 @@ export function RightWindow({
         >
           <SortableContext items={items} strategy={verticalListSortingStrategy}>
             {items.map((item) => (
-              <div key={item.id}>
+              <div key={item.id} className=''>
                 <DraggableItem
                   key={item.id}
                   item={item}

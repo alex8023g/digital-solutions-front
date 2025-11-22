@@ -27,10 +27,12 @@ export function HomePage() {
 
   return (
     <div className=''>
-      <h1>Experiment Page 2</h1>
+      <h1 className='py-4 text-center text-2xl font-semibold'>
+        Цифровые решения Алексей Грачев
+      </h1>
 
-      <div className=' border flex max-w-4xl mx-auto'>
-        <div className='h-[485px] overflow-y-hidden border w-1/2 flex flex-col'>
+      <div className='mx-auto flex max-w-4xl rounded-lg border border-gray-200 shadow-md'>
+        <div className='flex h-[485px] w-1/2 flex-col overflow-y-hidden border-r border-b border-gray-200'>
           <div className=' '>
             <FilterLeft setElements={setElements} setFilter={setFilter} />
             <AddElement />
@@ -45,11 +47,11 @@ export function HomePage() {
             itemContent={(index, element) => {
               return (
                 <div
-                  className='text-start'
+                  className='border-b border-gray-200 p-2 text-start'
                   onClick={async () => {
                     const data = await addSelectedRecord(element.id);
                     setElements((elements) =>
-                      elements.filter((e) => e.id !== element.id)
+                      elements.filter((e) => e.id !== element.id),
                     );
                     setSelectedElements((selectedElements) => {
                       if (
@@ -72,7 +74,7 @@ export function HomePage() {
             }}
           />
         </div>
-        <div className='h-[485px] overflow-y-hidden  w-1/2 flex flex-col'>
+        <div className='flex h-[485px] w-1/2 flex-col overflow-y-hidden'>
           <RightWindow
             items={selectedElements}
             setItems={setSelectedElements}
