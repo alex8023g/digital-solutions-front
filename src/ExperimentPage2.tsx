@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import {
   DndContext,
   closestCenter,
@@ -23,7 +23,7 @@ export function ExperimentPage2() {
     useSensor(PointerSensor),
     useSensor(KeyboardSensor, {
       coordinateGetter: sortableKeyboardCoordinates,
-    })
+    }),
   );
 
   useEffect(() => {
@@ -31,7 +31,7 @@ export function ExperimentPage2() {
   }, [items]);
 
   return (
-    <div className='h-[485px] border '>
+    <div className='h-[485px] border'>
       <h2>drag and drop</h2>
       <DndContext
         sensors={sensors}
