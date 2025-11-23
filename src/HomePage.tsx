@@ -44,7 +44,7 @@ export function HomePage() {
               loadMore();
             }}
             totalCount={0}
-            itemContent={(index, element) => {
+            itemContent={(_, element) => {
               return (
                 <div
                   className='border-b border-gray-200 p-2 text-start'
