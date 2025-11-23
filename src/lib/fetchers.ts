@@ -1,9 +1,19 @@
 import type { Element } from '../HomePage';
 
-export async function getRecords({ index, filter }: { index: number; filter: number[] }) {
+const host = import.meta.env.HOST || 'http://localhost';
+const port = import.meta.env.PORT || 3000;
+const baseUrl = `${host}:${port}/api/v1`;
+
+export async function getRecords({
+  index,
+  filter,
+}: {
+  index: number;
+  filter: number[];
+}) {
   console.log('🚀 ~ getRecords ~ start, index:', index);
   try {
-    const response = await fetch('http://localhost:3000/api/v1/records', {
+    const response = await fetch(`${baseUrl}/records`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -27,7 +37,7 @@ export async function getSelectedRecords({
   filter: number[];
 }) {
   try {
-    const response = await fetch('http://localhost:3000/api/v1/selected-records', {
+    const response = await fetch(`${baseUrl}/selected-records`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -52,7 +62,7 @@ export async function saveSelectedOrder({
 }) {
   console.log('🚀 ~ setSelectedRecords ~ records:', records);
   try {
-    const res = await fetch('http://localhost:3000/api/v1/save-selected-order', {
+    const res = await fetch(`${baseUrl}/save-selected-order`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -68,7 +78,7 @@ export async function saveSelectedOrder({
 
 export async function addSelectedRecord(id: number) {
   try {
-    const response = await fetch('http://localhost:3000/api/v1/add-selected-record', {
+    const response = await fetch(`${baseUrl}/add-selected-record`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -86,7 +96,7 @@ export async function addSelectedRecord(id: number) {
 
 export async function removeSelectedRecord(id: number) {
   try {
-    const response = await fetch('http://localhost:3000/api/v1/remove-selected-record', {
+    const response = await fetch(`${baseUrl}/remove-selected-record`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -95,7 +105,10 @@ export async function removeSelectedRecord(id: number) {
     });
     const data: { status: string } = await response.json();
     if (data.status !== 'ok') {
-      console.error('🚀 ~ removeSelectedRecord ~ error:', 'Failed to remove record');
+      console.error(
+        '🚀 ~ removeSelectedRecord ~ error:',
+        'Failed to remove record',
+      );
     }
   } catch (error) {
     console.error('🚀 ~ addRecord ~ error:', error);
@@ -115,7 +128,7 @@ type ResponseT =
 
 export async function addNewRecord(id: number) {
   try {
-    const response = await fetch('http://localhost:3000/api/v1/add-new-record', {
+    const response = await fetch(`${baseUrl}/add-new-record`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
