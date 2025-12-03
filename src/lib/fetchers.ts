@@ -1,8 +1,6 @@
 import type { Element } from '../HomePage';
 
-const host = import.meta.env.HOST || 'http://localhost';
-const port = import.meta.env.PORT || 3000;
-const baseUrl = `${host}:${port}/api/v1`;
+const baseUrl = import.meta.env.VITE_BASE_URL;
 
 export async function getRecords({
   index,
